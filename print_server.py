@@ -268,7 +268,7 @@ def process_print_job(job_id: str):
                     lpr_print(color_pdf, COLOR_PRINTER, copies=copies, color=True)
                     color_pages = (to_p - from_p + 1) * copies
                     total_color += color_pages
-                    log.info("✅ Color printed: %s (%d pages × %d copies)",
+                    log.info("   Color printed: %s (%d pages × %d copies)",
                              fname, to_p - from_p + 1, copies)
                 except Exception as e:
                     errors.append(f"Color print failed for {fname}: {e}")
@@ -288,7 +288,7 @@ def process_print_job(job_id: str):
                         lpr_print(bw_pdf, MONO_PRINTER, copies=copies, color=False)
                         bw_pages = (bw_to - bw_from + 1) * copies
                         total_bw += bw_pages
-                        log.info("✅ BW printed: %s pages %d-%d (%d copies)",
+                        log.info("   BW printed: %s pages %d-%d (%d copies)",
                                  fname, bw_from, bw_to, copies)
                     except Exception as e:
                         errors.append(f"BW print failed {fname} p{bw_from}-{bw_to}: {e}")
@@ -298,7 +298,7 @@ def process_print_job(job_id: str):
                 try:
                     lpr_print(pdf, MONO_PRINTER, copies=copies, color=False)
                     total_bw += page_count * copies
-                    log.info("✅ BW printed: %s (%d pages × %d copies)",
+                    log.info("   BW printed: %s (%d pages × %d copies)",
                              fname, page_count, copies)
                 except Exception as e:
                     errors.append(f"BW print failed for {fname}: {e}")
@@ -327,7 +327,7 @@ def process_print_job(job_id: str):
                    total_bw_pages=total_bw,
                    paper_after=paper,
                    errors=errors)
-        log.info("✅ Job %s done — color=%d bw=%d errors=%d",
+        log.info("   Job %s done — color=%d bw=%d errors=%d",
                  job_id, total_color, total_bw, len(errors))
 
     except Exception as e:
@@ -410,7 +410,7 @@ def upload_files():
         "payment_id":    None,
     }
     save_job(job)
-    log.info("📁 Job %s created — %d files — ₹%.2f", job_id, len(files), grand_total)
+    log.info("    Job %s created — %d files — ₹%.2f", job_id, len(files), grand_total)
 
     return jsonify(
         success=True,
@@ -430,7 +430,7 @@ def payment_webhook():
     """
     # ── Signature verification ──────────────────────────────────────────────
     data = request.get_json(force=True, silent=True) or {}
-    log.info("🔔 Webhook received: %s", json.dumps(data))
+    log.info("  Webhook received: %s", json.dumps(data))
 
     job_id     = data.get("job_id")
     payment_id = data.get("payment_id", "")
@@ -443,7 +443,7 @@ def payment_webhook():
     ).hexdigest()
 
     if signature and signature != expected:
-        log.warning("❌ Invalid webhook signature for job %s", job_id)
+        log.warning("  Invalid webhook signature for job %s", job_id)
         return jsonify(success=False, message="Invalid signature"), 403
 
     if status != "paid":
@@ -521,7 +521,7 @@ def set_paper():
     if "bw" in data:
         state["bw"] = int(data["bw"])
     save_json(PAPER_STATE, state)
-    log.info("📄 Paper refilled: %s", state)
+    log.info("  Paper refilled: %s", state)
     return jsonify(success=True, paper=state)
 
 
@@ -557,6 +557,6 @@ def recover_interrupted_jobs():
 # ── Entry point ───────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
-    log.info("🖨️  TakeAprinT server starting…")
+    log.info(" TakeAprinT server starting…")
     recover_interrupted_jobs()
     app.run(host="0.0.0.0", port=3000, debug=False, threaded=True)

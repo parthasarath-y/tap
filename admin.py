@@ -114,7 +114,7 @@ def cmd_retry(args):
     jobs[args.id]["updated_at"] = datetime.utcnow().isoformat()
     jobs[args.id]["retry_note"] = f"Manual retry at {datetime.utcnow().isoformat()}"
     save_jobs(jobs)
-    print(color("green", f"✅ Job {args.id} re-queued. Run print_worker.py to process."))
+    print(color("green", f"  Job {args.id} re-queued. Run print_worker.py to process."))
 
 def cmd_paper(args):
     state = load_json(PAPER_STATE, {"color": 500, "bw": 500})
@@ -124,7 +124,7 @@ def cmd_paper(args):
         if args.bw is not None:
             state["bw"] = args.bw
         save_json(PAPER_STATE, state)
-        print(color("green", "✅ Paper counts updated"))
+        print(color("green", "  Paper counts updated"))
     print(f"\n  Color paper : {color('cyan', str(state['color']))} sheets")
     print(f"  B&W paper   : {color('cyan', str(state['bw']))} sheets\n")
 
@@ -164,7 +164,7 @@ def cmd_simulate(args):
     try:
         with urllib.request.urlopen(req, timeout=5) as resp:
             body = json.loads(resp.read())
-            print(color("green", f"✅ Webhook sent: {body}"))
+            print(color("green", f" Webhook sent: {body}"))
     except urllib.error.URLError as e:
         print(color("red", f"Server unreachable: {e}"))
         print("  Make sure print_server.py is running on port 3000.")

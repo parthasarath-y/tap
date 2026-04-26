@@ -76,7 +76,7 @@ async function handleFiles(files) {
   for (const file of Array.from(files)) {
     const fileId    = Date.now() + Math.random();
     const pageCount = await getPageCount(file);
-    console.log(`📄 ${file.name} — ${pageCount} page(s)`);
+    console.log(`  ${file.name} — ${pageCount} page(s)`);
 
     const fileData = { id: fileId, file, name: file.name, pageCount };
     uploadedFilesData.push(fileData);
@@ -223,7 +223,7 @@ function showModal(data) {
     rows += `
       <div style="padding:1rem;background:#f8fafc;margin-bottom:0.8rem;
                   border-radius:8px;border-left:4px solid #667eea;">
-        <div style="font-weight:600;color:#1a1d3a;">📄 ${escapeHtml(f.original_name)}</div>
+        <div style="font-weight:600;color:#1a1d3a;">  ${escapeHtml(f.original_name)}</div>
         <div style="font-size:0.9rem;color:#64748b;margin-top:0.3rem;">
           ${f.printType === 'color'
             ? `Color: ${f.colorPages} pages &nbsp;|&nbsp; B&amp;W: ${f.bwPages} pages`
@@ -599,7 +599,7 @@ function startPolling(jobId) {
       const res    = await fetch(`http://localhost:3000/api/job/${jobId}`);
       const data   = await res.json();
       const status = data.job?.status;
-      console.log(`📊 Job status: ${status}`);
+      console.log(`  Job status: ${status}`);
 
       if (stateMap[status]) {
         showStatusOverlay(stateMap[status], { jobId });
@@ -667,8 +667,8 @@ payBtn.addEventListener('click', async function (e) {
     const result = await res.json();
 
     if (result.success) {
-      console.log('✅ Uploaded — job:', result.job_id);
-      console.log(`👉 Test: python3 admin.py simulate ${result.job_id}`);
+      console.log('  Uploaded — job:', result.job_id);
+      console.log(`  Test: python3 admin.py simulate ${result.job_id}`);
 
       // Show waiting-for-payment screen
       showStatusOverlay('waiting', { jobId: result.job_id });
@@ -702,6 +702,6 @@ function escapeHtml(text) {
 // ── Library check ─────────────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', () => {
   const missing = ['pdfjsLib','JSZip','XLSX'].filter(lib => typeof window[lib] === 'undefined');
-  if (missing.length) console.warn('⚠️ Missing:', missing.join(', '));
-  else console.log('✅ All libraries loaded successfully');
+  if (missing.length) console.warn('  Missing:', missing.join(', '));
+  else console.log('  All libraries loaded successfully');
 });
