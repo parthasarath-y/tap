@@ -176,4 +176,4 @@ if __name__ == '__main__':
     print(" Starting TakeAprinT server on http://localhost:3000")
     print(" Upload folder:", os.path.abspath(UPLOAD_FOLDER))
     app.run(debug=True, port=3000)
-    #idk
+    
