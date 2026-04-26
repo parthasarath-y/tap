@@ -119,7 +119,7 @@ Frontend served via VS Code Live Server on `http://localhost:5500`.
    f. Cleans up temp files and uploads
    g. Updates job status → "completed"
 10. Frontend polls /api/job/<id> every 3s
-11. Status overlay updates: queued → printing → done ✅ (or error ❌)
+11. Status overlay updates: queued → printing → done (or error )
 12. Done screen shows "Back to Home" button
 ```
 

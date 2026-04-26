@@ -207,7 +207,7 @@ def process_job(job_id: str):
                paper_after=paper,
                errors=errors)
 
-    log.info("✅ Job %s done — color=%d bw=%d errors=%d",
+    log.info("   Job %s done — color=%d bw=%d errors=%d",
              job_id, total_color, total_bw, len(errors))
 
 
@@ -236,7 +236,7 @@ def main():
         log.info("Processed %d job(s). Exiting.", n)
         sys.exit(0)
 
-    log.info("🖨️  Print worker started. Polling every %ds…", POLL_INTERVAL)
+    log.info("     Print worker started. Polling every %ds…", POLL_INTERVAL)
     while True:
         try:
             poll_once()
