@@ -1,0 +1,40 @@
+2026-04-26 22:18:31,476 [INFO] 🖨️  TakeAprinT server starting…
+2026-04-26 22:18:31,479 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:3000
+ * Running on http://192.168.1.9:3000
+2026-04-26 22:18:31,479 [INFO] [33mPress CTRL+C to quit[0m
+2026-04-26 22:20:51,099 [INFO] 📁 Job a1432ad5-2c30-452d-b557-ff20678f34c6 created — 1 files — ₹180.00
+2026-04-26 22:20:51,099 [INFO] 127.0.0.1 - - [26/Apr/2026 22:20:51] "POST /api/upload HTTP/1.1" 200 -
+2026-04-26 22:20:54,103 [INFO] 127.0.0.1 - - [26/Apr/2026 22:20:54] "GET /api/job/a1432ad5-2c30-452d-b557-ff20678f34c6 HTTP/1.1" 200 -
+2026-04-26 22:20:57,106 [INFO] 127.0.0.1 - - [26/Apr/2026 22:20:57] "GET /api/job/a1432ad5-2c30-452d-b557-ff20678f34c6 HTTP/1.1" 200 -
+2026-04-26 22:21:00,082 [INFO] 🔔 Webhook received: {"job_id": "a1432ad5-2c30-452d-b557-ff20678f34c6", "payment_id": "test_pay_1777202460", "status": "paid", "signature": "f30bcac7d780184f1d2dc6e15c0ee20b72b28bb28025fdbe42d11eaa7cedf603"}
+2026-04-26 22:21:00,082 [INFO] 💳 Payment confirmed for job a1432ad5-2c30-452d-b557-ff20678f34c6 — queuing print
+2026-04-26 22:21:00,083 [INFO] 127.0.0.1 - - [26/Apr/2026 22:21:00] "POST /api/webhook/payment HTTP/1.1" 200 -
+2026-04-26 22:21:00,083 [INFO] ▶ Starting print job a1432ad5-2c30-452d-b557-ff20678f34c6
+2026-04-26 22:21:00,103 [INFO] 127.0.0.1 - - [26/Apr/2026 22:21:00] "GET /api/job/a1432ad5-2c30-452d-b557-ff20678f34c6 HTTP/1.1" 200 -
+2026-04-26 22:21:00,317 [INFO] 📂 [TEST] Saved → testfiles/222100_COLOR_copy1_a1432ad5-2c30-452d-b557-ff20678f34c6_0_test_color.pdf
+2026-04-26 22:21:00,317 [INFO] ✅ Color printed: a1432ad5-2c30-452d-b557-ff20678f34c6_0_test.pdf (16 pages × 1 copies)
+2026-04-26 22:21:00,422 [INFO] 📂 [TEST] Saved → testfiles/222100_BW_copy1_a1432ad5-2c30-452d-b557-ff20678f34c6_0_test_bw_1_8.pdf
+2026-04-26 22:21:00,422 [INFO] ✅ BW printed: a1432ad5-2c30-452d-b557-ff20678f34c6_0_test.pdf pages 1-8 (1 copies)
+2026-04-26 22:21:00,422 [INFO] Paper remaining — Color: 484  B&W: 492
+2026-04-26 22:21:00,422 [INFO] 🧹 Temp files cleaned for job a1432ad5-2c30-452d-b557-ff20678f34c6
+2026-04-26 22:21:00,422 [INFO] 🗑️  Removed upload: a1432ad5-2c30-452d-b557-ff20678f34c6_0_test.pdf
+2026-04-26 22:21:00,423 [INFO] ✅ Job a1432ad5-2c30-452d-b557-ff20678f34c6 done — color=16 bw=8 errors=0
+2026-04-26 22:21:03,106 [INFO] 127.0.0.1 - - [26/Apr/2026 22:21:03] "GET /api/job/a1432ad5-2c30-452d-b557-ff20678f34c6 HTTP/1.1" 200 -
+2026-04-26 22:21:54,991 [INFO] 📁 Job 6c54b0f1-3b32-483b-ad22-0c954978b282 created — 1 files — ₹36.00
+2026-04-26 22:21:54,992 [INFO] 127.0.0.1 - - [26/Apr/2026 22:21:54] "POST /api/upload HTTP/1.1" 200 -
+2026-04-26 22:21:58,098 [INFO] 127.0.0.1 - - [26/Apr/2026 22:21:58] "GET /api/job/6c54b0f1-3b32-483b-ad22-0c954978b282 HTTP/1.1" 200 -
+2026-04-26 22:22:01,091 [INFO] 127.0.0.1 - - [26/Apr/2026 22:22:01] "GET /api/job/6c54b0f1-3b32-483b-ad22-0c954978b282 HTTP/1.1" 200 -
+2026-04-26 22:22:04,105 [INFO] 127.0.0.1 - - [26/Apr/2026 22:22:04] "GET /api/job/6c54b0f1-3b32-483b-ad22-0c954978b282 HTTP/1.1" 200 -
+2026-04-26 22:22:05,737 [INFO] 🔔 Webhook received: {"job_id": "6c54b0f1-3b32-483b-ad22-0c954978b282", "payment_id": "test_pay_1777202525", "status": "paid", "signature": "1d18f9aadb2bd2a3de604c9dcb2ad73b697e676e3f9fe2689c7eb7d89b8ae237"}
+2026-04-26 22:22:05,737 [INFO] 💳 Payment confirmed for job 6c54b0f1-3b32-483b-ad22-0c954978b282 — queuing print
+2026-04-26 22:22:05,737 [INFO] ▶ Starting print job 6c54b0f1-3b32-483b-ad22-0c954978b282
+2026-04-26 22:22:05,738 [INFO] 127.0.0.1 - - [26/Apr/2026 22:22:05] "POST /api/webhook/payment HTTP/1.1" 200 -
+2026-04-26 22:22:05,762 [INFO] 📂 [TEST] Saved → testfiles/222205_BW_copy1_6c54b0f1-3b32-483b-ad22-0c954978b282_0_test.pdf
+2026-04-26 22:22:05,762 [INFO] ✅ BW printed: 6c54b0f1-3b32-483b-ad22-0c954978b282_0_test.pdf (24 pages × 1 copies)
+2026-04-26 22:22:05,762 [INFO] Paper remaining — Color: 484  B&W: 468
+2026-04-26 22:22:05,762 [INFO] 🧹 Temp files cleaned for job 6c54b0f1-3b32-483b-ad22-0c954978b282
+2026-04-26 22:22:05,762 [INFO] 🗑️  Removed upload: 6c54b0f1-3b32-483b-ad22-0c954978b282_0_test.pdf
+2026-04-26 22:22:05,763 [INFO] ✅ Job 6c54b0f1-3b32-483b-ad22-0c954978b282 done — color=0 bw=24 errors=0
+2026-04-26 22:22:07,105 [INFO] 127.0.0.1 - - [26/Apr/2026 22:22:07] "GET /api/job/6c54b0f1-3b32-483b-ad22-0c954978b282 HTTP/1.1" 200 -

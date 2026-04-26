@@ -576,6 +576,8 @@ function showStatusOverlay(state, info = {}) {
     window.location.href = '/';
   });
 
+
+
   overlay.querySelector('#tapRetryBtn')?.addEventListener('click', () => {
     removeOverlay();
     resetUI();
