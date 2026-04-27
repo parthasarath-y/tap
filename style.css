@@ -206,7 +206,7 @@
     }
     .queue-file-item select,
     .queue-file-item input {
-      width: 100%;
+      width: 60px;
       padding: 0.5rem;
       border-radius: 6px;
       border: 2px solid #cbd5e0;
@@ -276,3 +276,5 @@
         max-width: 400px;
       }
     }
+
+
