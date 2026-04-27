@@ -158,7 +158,6 @@ def cmd_simulate(args):
         "signature":  signature,
     }).encode()
 
-    url = f"http://localhost:3000/api/webhook/payment"
     req = urllib.request.Request(url, data=payload,
                                  headers={"Content-Type": "application/json"})
     try:

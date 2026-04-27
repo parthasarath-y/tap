@@ -1,5 +1,3 @@
-// script.js — TakeAprinT (with full status overlay)
-
 if (typeof pdfjsLib !== 'undefined') {
   pdfjsLib.GlobalWorkerOptions.workerSrc =
     'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
@@ -15,7 +13,7 @@ const dropZone  = document.getElementById('dropZone');
 let uploadedFilesData = [];
 let activePoller      = null;
 
-//   Drag & drop  
+// ] Drag & drop 
 uploadBtn.addEventListener('click', () => fileInput.click());
 fileInput.addEventListener('change', () => handleFiles(fileInput.files));
 
@@ -30,7 +28,7 @@ fileInput.addEventListener('change', () => handleFiles(fileInput.files));
 });
 dropZone.addEventListener('drop', e => handleFiles(e.dataTransfer.files));
 
-//   Page counter   
+//  Page counter 
 async function getPageCount(file) {
   const ext = file.name.toLowerCase().split('.').pop();
   try {
@@ -68,7 +66,7 @@ async function getPageCount(file) {
   }
 }
 
-//   File handler   
+//  File handler 
 async function handleFiles(files) {
   if (!files?.length) return;
   if (preview.querySelector('.empty')) preview.innerHTML = '';
@@ -76,7 +74,7 @@ async function handleFiles(files) {
   for (const file of Array.from(files)) {
     const fileId    = Date.now() + Math.random();
     const pageCount = await getPageCount(file);
-    console.log(`  ${file.name} — ${pageCount} page(s)`);
+    console.log(`${file.name} — ${pageCount} page(s)`);
 
     const fileData = { id: fileId, file, name: file.name, pageCount };
     uploadedFilesData.push(fileData);
@@ -145,13 +143,11 @@ async function handleFiles(files) {
       colorCountSpan.textContent = Math.max(0, to - from + 1);
       bwCountSpan.textContent    = Math.max(0, (from - 1) + (pageCount - to));
     }
-
     select.addEventListener('change', () => {
       const isColor = select.value === 'color';
       rangeDiv.classList.toggle('hidden', !isColor);
       if (isColor) { fromIn.value = 1; toIn.value = pageCount; updatePageCounts(); }
     });
-
     function validateRange() {
       let from = Math.max(1, Math.min(parseInt(fromIn.value) || 1, pageCount));
       let to   = Math.max(1, Math.min(parseInt(toIn.value)   || pageCount, pageCount));
@@ -186,7 +182,7 @@ function updatePayButton() {
   if (!activePoller && uploadedFilesData.length > 0) payBtn.textContent = 'Continue & Pay';
 }
 
-//   Local price calc  
+//  Local price calc 
 function calculateLocalPrices() {
   const COLOR_PRICE = 10.5, BW_PRICE = 1.5;
   const filesData = [];
@@ -210,7 +206,7 @@ function calculateLocalPrices() {
   return { files: filesData, grandTotal: grandTotal.toFixed(2) };
 }
 
-//   Order summary modal               ─
+//  Order summary modal 
 function showModal(data) {
   document.getElementById('confirmationModal')?.remove();
   const modal = document.createElement('div');
@@ -223,7 +219,7 @@ function showModal(data) {
     rows += `
       <div style="padding:1rem;background:#f8fafc;margin-bottom:0.8rem;
                   border-radius:8px;border-left:4px solid #667eea;">
-        <div style="font-weight:600;color:#1a1d3a;">  ${escapeHtml(f.original_name)}</div>
+        <div style="font-weight:600;color:#1a1d3a;"> ${escapeHtml(f.original_name)}</div>
         <div style="font-size:0.9rem;color:#64748b;margin-top:0.3rem;">
           ${f.printType === 'color'
             ? `Color: ${f.colorPages} pages &nbsp;|&nbsp; B&amp;W: ${f.bwPages} pages`
@@ -269,212 +265,219 @@ function showModal(data) {
   });
 }
 
-//   Status overlay   
-// Injects a full-screen overlay on top of everything showing current print state.
-// States: 'uploading' | 'waiting' | 'queued' | 'processing' | 'done' | 'error'
-
+//  Status overlay 
 function injectOverlayStyles() {
   if (document.getElementById('tap-overlay-styles')) return;
   const style = document.createElement('style');
   style.id = 'tap-overlay-styles';
   style.textContent = `
-    #tap-status-overlay {
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap');
+
+    #tap-overlay {
       position: fixed;
       inset: 0;
-      background: #0f1124;
+      background: #6c7bee;
       z-index: 10000;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 0;
-      animation: tapFadeIn 0.35s ease;
+      font-family: 'Roboto', sans-serif;
+      animation: tapOverlayIn 0.3s ease;
     }
-    @keyframes tapFadeIn {
-      from { opacity: 0; transform: scale(0.97); }
-      to   { opacity: 1; transform: scale(1); }
+    @keyframes tapOverlayIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
     }
 
-    /* Printer SVG animation */
-    .tap-printer-wrap {
-      position: relative;
-      width: 120px;
-      height: 120px;
-      margin-bottom: 2rem;
-    }
-    .tap-printer-icon {
-      font-size: 5rem;
-      color: #667eea;
-      line-height: 1;
-      display: block;
+    /* ── Card ── */
+    .tap-card {
+      background: #fff;
+      width: 360px;
+      border-radius: 8px;
+      padding: 80px 30px 25px;
       text-align: center;
+      position: relative;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+      animation: tapCardUp 0.4s cubic-bezier(0.34,1.4,0.64,1);
     }
-    .tap-paper-out {
+    @keyframes tapCardUp {
+      from { transform: translateY(40px); opacity: 0; }
+      to   { transform: translateY(0);    opacity: 1; }
+    }
+
+    /* ── Top badge ── */
+    .tap-badge {
       position: absolute;
-      bottom: -4px;
+      top: -44px;
       left: 50%;
       transform: translateX(-50%);
-      width: 44px;
-      height: 6px;
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      border: 5px solid #6c7bee;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.4rem;
+    }
+    .tap-badge--spin {
       background: #fff;
+      border-color: rgba(255,255,255,0.4);
+      border-top-color: #fff;
+      animation: tapSpin 0.9s linear infinite;
+    }
+    @keyframes tapSpin { to { transform: translateX(-50%) rotate(360deg); } }
+
+    .tap-badge--print {
+      background: #fff;
+      animation: tapPulse 1.2s ease-in-out infinite;
+    }
+    @keyframes tapPulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(108,123,238,0.4); }
+      50%      { box-shadow: 0 0 0 10px rgba(108,123,238,0); }
+    }
+
+    .tap-badge--done  { background: #60c878; border-color: #fff; }
+    .tap-badge--error { background: #ef4444; border-color: #fff; }
+
+    /* paper slide on printer badge */
+    .tap-paper {
+      position: absolute;
+      bottom: -2px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 28px;
+      height: 5px;
+      background: #6c7bee;
       border-radius: 2px;
-      transform-origin: top center;
-      animation: tapPaperSlide 1.4s ease-in-out infinite;
+      animation: tapPaper 1.3s ease-in-out infinite;
     }
-    @keyframes tapPaperSlide {
-      0%   { height: 4px;  opacity: 0; transform: translateX(-50%) translateY(0); }
+    @keyframes tapPaper {
+      0%   { height: 3px;  opacity: 0; }
       20%  { opacity: 1; }
-      80%  { height: 36px; opacity: 1; }
-      100% { height: 36px; opacity: 0; transform: translateX(-50%) translateY(8px); }
+      80%  { height: 28px; opacity: 1; }
+      100% { height: 28px; opacity: 0; transform: translateX(-50%) translateY(6px); }
     }
 
-    /* Spinner for uploading/waiting */
-    .tap-spinner {
-      width: 64px;
-      height: 64px;
-      border: 4px solid rgba(102,126,234,0.2);
-      border-top-color: #667eea;
-      border-radius: 50%;
-      animation: tapSpin 0.85s linear infinite;
-      margin-bottom: 2rem;
+    /* ── Text ── */
+    .tap-title {
+      text-transform: uppercase;
+      color: #55585b;
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      margin: 0 0 4px;
     }
-    @keyframes tapSpin {
-      to { transform: rotate(360deg); }
+    .tap-sub {
+      color: #959a9e;
+      font-size: 14px;
+      font-weight: 400;
+      margin: 0 0 20px;
     }
 
-    /* Success checkmark */
-    .tap-check-wrap {
-      width: 90px;
-      height: 90px;
-      border-radius: 50%;
-      background: #22c55e;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 2rem;
-      animation: tapCheckPop 0.5s cubic-bezier(0.34,1.56,0.64,1);
+    /* ── Body panel ── */
+    .tap-body {
+      background: #f8f6f6;
+      border-radius: 6px;
+      padding: 20px;
+      margin-bottom: 16px;
+      text-align: left;
     }
-    @keyframes tapCheckPop {
-      from { transform: scale(0); opacity: 0; }
-      to   { transform: scale(1); opacity: 1; }
-    }
-    .tap-check-wrap i { font-size: 2.5rem; color: #fff; }
 
-    /* Error icon */
-    .tap-error-wrap {
-      width: 90px;
-      height: 90px;
-      border-radius: 50%;
-      background: #ef4444;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 2rem;
-      animation: tapCheckPop 0.5s cubic-bezier(0.34,1.56,0.64,1);
-    }
-    .tap-error-wrap i { font-size: 2.5rem; color: #fff; }
-
-    .tap-status-title {
-      font-size: 1.8rem;
+    /* amount */
+    .tap-amount {
+      text-align: center;
+      font-size: 58px;
       font-weight: 700;
-      color: #fff;
-      margin: 0 0 0.6rem;
-      text-align: center;
+      color: #232528;
+      margin: 8px 0 16px;
+      line-height: 1;
     }
-    .tap-status-sub {
-      font-size: 1rem;
-      color: #94a3b8;
-      margin: 0 0 2.5rem;
-      text-align: center;
-      max-width: 320px;
-      line-height: 1.6;
+    .tap-amount span { font-size: 55%; }
+
+    /* detail rows */
+    .tap-detail-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .tap-detail-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #667eea22;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #667eea;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+    .tap-detail-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      color: #b0b4b8;
+      margin-bottom: 2px;
+    }
+    .tap-detail-value {
+      font-size: 13px;
+      font-weight: 600;
+      color: #232528;
     }
 
-    /* Dots for animated sub */
+    /* ── Tags ── */
+    .tap-tags {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .tap-tag {
+      text-transform: uppercase;
+      background: #f8f6f6;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      color: #b0b4b8;
+      letter-spacing: 0.05em;
+    }
+    .tap-tag--green { background: #dcfce7; color: #16a34a; }
+
+    /* ── Buttons ── */
+    .tap-btn {
+      width: 100%;
+      padding: 0.85rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: filter 0.2s, transform 0.15s;
+      font-family: 'Roboto', sans-serif;
+    }
+    .tap-btn:hover { filter: brightness(1.08); transform: scale(1.01); }
+    .tap-btn--green { background: #60c878; color: #fff; }
+    .tap-btn--red   { background: transparent; color: #ef4444;
+                      border: 2px solid #ef4444; }
+    .tap-btn--red:hover { background: #ef4444; color: #fff; filter: none; }
+
+    /* ── Spinner sub-state ── */
     .tap-dots::after {
       content: '';
-      animation: tapDots 1.5s steps(4, end) infinite;
+      animation: tapDots 1.4s steps(4,end) infinite;
     }
     @keyframes tapDots {
-      0%   { content: ''; }
-      25%  { content: '.'; }
-      50%  { content: '..'; }
-      75%  { content: '...'; }
-      100% { content: ''; }
-    }
-
-    /* Steps row */
-    .tap-steps {
-      display: flex;
-      gap: 0.5rem;
-      align-items: center;
-      margin-bottom: 3rem;
-    }
-    .tap-step {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-size: 0.85rem;
-      color: #475569;
-      transition: color 0.3s;
-    }
-    .tap-step.active  { color: #667eea; font-weight: 600; }
-    .tap-step.done    { color: #22c55e; }
-    .tap-step-dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: #334155;
-      transition: background 0.3s;
-    }
-    .tap-step.active .tap-step-dot  { background: #667eea; }
-    .tap-step.done   .tap-step-dot  { background: #22c55e; }
-    .tap-step-sep {
-      width: 24px; height: 2px;
-      background: #334155;
-      border-radius: 1px;
-    }
-
-    /* Buttons */
-    .tap-btn-done {
-      padding: 0.9rem 3rem;
-      background: #22c55e;
-      color: #fff;
-      border: none;
-      border-radius: 12px;
-      font-size: 1.1rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: background 0.2s, transform 0.15s;
-      animation: tapCheckPop 0.6s 0.2s cubic-bezier(0.34,1.56,0.64,1) both;
-    }
-    .tap-btn-done:hover { background: #16a34a; transform: scale(1.03); }
-
-    .tap-btn-retry {
-      padding: 0.9rem 3rem;
-      background: transparent;
-      color: #ef4444;
-      border: 2px solid #ef4444;
-      border-radius: 12px;
-      font-size: 1.1rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .tap-btn-retry:hover { background: #ef4444; color: #fff; }
-
-    .tap-job-id {
-      margin-top: 1.5rem;
-      font-size: 0.75rem;
-      color: #334155;
-      font-family: monospace;
-      letter-spacing: 0.05em;
+      0%  { content:''; }  25% { content:'.'; }
+      50% { content:'..'; } 75% { content:'...'; }
     }
   `;
   document.head.appendChild(style);
 }
 
 function removeOverlay() {
-  document.getElementById('tap-status-overlay')?.remove();
+  document.getElementById('tap-overlay')?.remove();
 }
 
 function showStatusOverlay(state, info = {}) {
@@ -482,131 +485,138 @@ function showStatusOverlay(state, info = {}) {
   removeOverlay();
 
   const overlay = document.createElement('div');
-  overlay.id = 'tap-status-overlay';
+  overlay.id = 'tap-overlay';
 
-  const stepDefs = ['Upload', 'Payment', 'Printing'];
-  const stepIndex = { uploading: 0, waiting: 1, queued: 1, processing: 2 };
-
-  function stepsHTML(activeIdx) {
-    return stepDefs.map((label, i) => {
-      const cls = i < activeIdx ? 'done' : i === activeIdx ? 'active' : '';
-      const sep = i < stepDefs.length - 1
-        ? `<div class="tap-step-sep"></div>` : '';
-      return `
-        <div class="tap-step ${cls}">
-          <div class="tap-step-dot"></div>
-          ${label}
-        </div>${sep}`;
-    }).join('');
+  //  Shared "in-progress" card builder 
+  function progressCard(badgeClass, badgeIcon, title, sub) {
+    return `
+      <div class="tap-card">
+        <div class="tap-badge ${badgeClass}">${badgeIcon}</div>
+        <h1 class="tap-title">${title}</h1>
+        <h2 class="tap-sub">${sub}</h2>
+      </div>`;
   }
 
   const configs = {
-    uploading: {
-      icon: `<div class="tap-spinner"></div>`,
-      title: 'Uploading files',
-      sub: `<span class="tap-dots">Sending your files to the server</span>`,
-      steps: stepsHTML(0),
-      actions: '',
+
+    uploading: () => progressCard(
+      'tap-badge--spin', '',
+      'Uploading', '<span class="tap-dots">Sending your files</span>'
+    ),
+
+    waiting: () => progressCard(
+      'tap-badge--spin', '',
+      'Awaiting Payment',
+      `Job <strong style="color:#667eea">${(info.jobId||'').slice(0,8)}…</strong>`
+    ),
+
+    queued: () => progressCard(
+      'tap-badge--spin', '',
+      'In Queue', '<span class="tap-dots">Waiting to print</span>'
+    ),
+
+    processing: () => progressCard(
+      'tap-badge--print',
+      `<span style="position:relative;display:inline-block;">
+         <i class="fa-solid fa-print" style="color:#667eea;font-size:1.8rem;"></i>
+         <span class="tap-paper"></span>
+       </span>`,
+      'Printing', '<span class="tap-dots">Your document is printing</span>'
+    ),
+
+    done: () => {
+      const total   = info.grandTotal || '0.00';
+      const [whole, dec] = total.split('.');
+      const jobShort = (info.jobId||'').slice(0,8).toUpperCase();
+      const pages    = [
+        info.colorPages ? `${info.colorPages} color` : '',
+        info.bwPages    ? `${info.bwPages} b&w`      : '',
+      ].filter(Boolean).join(' · ') || '—';
+
+      return `
+        <div class="tap-card">
+          <div class="tap-badge tap-badge--done">
+            <i class="fa-solid fa-check" style="color:#fff;font-size:2rem;"></i>
+          </div>
+
+          <h1 class="tap-title">Payment Complete</h1>
+          <h2 class="tap-sub">Your print job is on its way</h2>
+
+          <div class="tap-body">
+            <div class="tap-amount"><span>₹</span>${whole}<span>.${dec||'00'}</span></div>
+
+            <div class="tap-detail-row">
+              <div class="tap-detail-icon"><i class="fa-solid fa-file-lines"></i></div>
+              <div>
+                <div class="tap-detail-label">Pages printed</div>
+                <div class="tap-detail-value">${pages}</div>
+              </div>
+            </div>
+
+            <div class="tap-detail-row">
+              <div class="tap-detail-icon"><i class="fa-solid fa-print"></i></div>
+              <div>
+                <div class="tap-detail-label">Print shop</div>
+                <div class="tap-detail-value">TakeAprinT</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tap-tags">
+            <span class="tap-tag tap-tag--green">completed</span>
+            <span class="tap-tag">#${jobShort}</span>
+          </div>
+
+          <button type="button" class="tap-btn tap-btn--green" id="tapDoneBtn">
+            <i class="fa-solid fa-house" style="margin-right:0.4rem;"></i>Back to Home
+          </button>
+        </div>`;
     },
-    waiting: {
-      icon: `<div class="tap-spinner"></div>`,
-      title: 'Awaiting payment',
-      sub: `Job <code style="color:#667eea">${(info.jobId||'').slice(0,8)}…</code> is ready.<br>Complete your payment to begin printing.`,
-      steps: stepsHTML(1),
-      actions: '',
-    },
-    queued: {
-      icon: `<div class="tap-spinner"></div>`,
-      title: 'In the queue',
-      sub: `<span class="tap-dots">Your job is waiting to print</span>`,
-      steps: stepsHTML(1),
-      actions: '',
-    },
-    processing: {
-      icon: `
-        <div class="tap-printer-wrap">
-          <span class="tap-printer-icon"><i class="fa-solid fa-print"></i></span>
-          <div class="tap-paper-out"></div>
-        </div>`,
-      title: 'Printing',
-      sub: `<span class="tap-dots">Your document is being printed</span>`,
-      steps: stepsHTML(2),
-      actions: '',
-    },
-    done: {
-      icon: `<div class="tap-check-wrap"><i class="fa-solid fa-check"></i></div>`,
-      title: 'All done!',
-      sub: `Your document has been sent to the printer.<br>
-            ${info.colorPages ? `<span style="color:#667eea">Color: ${info.colorPages} page(s)</span> &nbsp;·&nbsp; ` : ''}
-            <span style="color:#94a3b8">B&amp;W: ${info.bwPages||0} page(s)</span>`,
-      steps: '',
-      actions: `<button type="button" class="tap-btn-done" id="tapDoneBtn">
-                  <i class="fa-solid fa-house" style="margin-right:0.5rem"></i>Back to Home
-                </button>`,
-    },
-    error: {
-      icon: `<div class="tap-error-wrap"><i class="fa-solid fa-xmark"></i></div>`,
-      title: 'Something went wrong',
-      sub: info.message || 'The print job encountered an error. Please try again.',
-      steps: '',
-      actions: `<button type="button" class="tap-btn-retry" id="tapRetryBtn">
-                  <i class="fa-solid fa-rotate-right" style="margin-right:0.5rem"></i>Try Again
-                </button>`,
-    },
+
+    error: () => `
+      <div class="tap-card">
+        <div class="tap-badge tap-badge--error">
+          <i class="fa-solid fa-xmark" style="color:#fff;font-size:2rem;"></i>
+        </div>
+        <h1 class="tap-title">Something went wrong</h1>
+        <h2 class="tap-sub">${info.message || 'The print job encountered an error.'}</h2>
+        <button type="button" class="tap-btn tap-btn--red" id="tapRetryBtn">
+          <i class="fa-solid fa-rotate-right" style="margin-right:0.4rem;"></i>Try Again
+        </button>
+      </div>`,
   };
 
-  const cfg = configs[state] || configs.waiting;
-
-  overlay.innerHTML = `
-    ${cfg.icon}
-    <h1 class="tap-status-title">${cfg.title}</h1>
-    <p class="tap-status-sub">${cfg.sub}</p>
-    ${cfg.steps ? `<div class="tap-steps">${cfg.steps}</div>` : ''}
-    ${cfg.actions}
-    ${info.jobId ? `<div class="tap-job-id">Job ID: ${info.jobId}</div>` : ''}
-  `;
-
+  overlay.innerHTML = (configs[state] || configs.waiting)();
   document.body.appendChild(overlay);
 
-  // Wire buttons
   overlay.querySelector('#tapDoneBtn')?.addEventListener('click', () => {
-    removeOverlay();
-    resetUI();
-    // Redirect to homepage — change '/' if your homepage is different
+    removeOverlay(); resetUI();
     window.location.href = '/';
   });
-
-
-
   overlay.querySelector('#tapRetryBtn')?.addEventListener('click', () => {
-    removeOverlay();
-    resetUI();
+    removeOverlay(); resetUI();
   });
 }
 
-//   Job poller  ─
-function startPolling(jobId) {
+//  Job poller 
+function startPolling(jobId, grandTotal) {
   if (activePoller) clearInterval(activePoller);
-
-  const stateMap = {
-    pending_payment: 'waiting',
-    queued:          'queued',
-    processing:      'processing',
-  };
+  const map = { pending_payment:'waiting', queued:'queued', processing:'processing' };
 
   activePoller = setInterval(async () => {
     try {
       const res    = await fetch(`http://localhost:3000/api/job/${jobId}`);
       const data   = await res.json();
       const status = data.job?.status;
-      console.log(`  Job status: ${status}`);
+      console.log(` ${status}`);
 
-      if (stateMap[status]) {
-        showStatusOverlay(stateMap[status], { jobId });
+      if (map[status]) {
+        showStatusOverlay(map[status], { jobId });
       } else if (status === 'completed') {
         clearInterval(activePoller); activePoller = null;
         showStatusOverlay('done', {
           jobId,
+          grandTotal,
           colorPages: data.job.total_color_pages || 0,
           bwPages:    data.job.total_bw_pages    || 0,
         });
@@ -620,9 +630,7 @@ function startPolling(jobId) {
         clearInterval(activePoller); activePoller = null;
         showStatusOverlay('error', { jobId, message: 'Print job failed. Check server logs.' });
       }
-    } catch (err) {
-      console.error('Poll error:', err);
-    }
+    } catch (err) { console.error('Poll error:', err); }
   }, 3000);
 }
 
@@ -634,17 +642,16 @@ function resetUI() {
   updatePayButton();
 }
 
-//   Pay button  ─
+//  Pay button 
 payBtn.addEventListener('click', async function (e) {
   e.preventDefault();
   e.stopPropagation();
-
   if (uploadedFilesData.length === 0 || activePoller) return;
 
-  const confirmed = await showModal(calculateLocalPrices());
+  const priceData = calculateLocalPrices();
+  const confirmed = await showModal(priceData);
   if (!confirmed) return;
 
-  // Show uploading state immediately
   showStatusOverlay('uploading');
 
   const formData = new FormData();
@@ -663,45 +670,33 @@ payBtn.addEventListener('click', async function (e) {
   formData.append('options', JSON.stringify(options));
 
   try {
-    const res    = await fetch('http://localhost:3000/api/upload', { method: 'POST', body: formData });
+    const res    = await fetch('http://localhost:3000/api/upload', { method:'POST', body:formData });
     const result = await res.json();
 
     if (result.success) {
-      console.log('  Uploaded — job:', result.job_id);
-      console.log(`  Test: python3 admin.py simulate ${result.job_id}`);
-
-      // Show waiting-for-payment screen
+      console.log('job:', result.job_id);
+      console.log(` Test: python3 admin.py simulate ${result.job_id}`);
+      activePoller = true;
       showStatusOverlay('waiting', { jobId: result.job_id });
-      activePoller = true; // block pay button while polling
-      startPolling(result.job_id);
-
-      //   Drop your payment gateway call here        
-      // e.g. Razorpay:
-      // const rzp = new Razorpay({ key:'rzp_live_xxx',
-      //   amount: Math.round(result.grand_total * 100), currency:'INR',
-      //   notes:{ job_id: result.job_id }, handler: ()=>{} });
-      // rzp.open();
-      //   
-
+      startPolling(result.job_id, priceData.grandTotal);
     } else {
       showStatusOverlay('error', { message: result.message || 'Upload failed.' });
     }
   } catch (err) {
-    console.error('Upload failed:', err);
-    showStatusOverlay('error', { message: 'Cannot reach server. Is print_server.py running on port 3000?' });
+    console.error(err);
+    showStatusOverlay('error', { message: 'Cannot reach server. Is print_server.py running?' });
   }
 });
 
-//   Escape helper   ─
+//  Escape helper 
 function escapeHtml(text) {
   const d = document.createElement('div');
   d.textContent = text;
   return d.innerHTML;
 }
 
-//   Library check   ─
 window.addEventListener('DOMContentLoaded', () => {
-  const missing = ['pdfjsLib','JSZip','XLSX'].filter(lib => typeof window[lib] === 'undefined');
-  if (missing.length) console.warn('  Missing:', missing.join(', '));
-  else console.log('  All libraries loaded successfully');
+  const missing = ['pdfjsLib','JSZip','XLSX'].filter(l => typeof window[l] === 'undefined');
+  if (missing.length) console.warn(' Missing:', missing.join(', '));
+  else console.log(' All libraries loaded successfully');
 });
