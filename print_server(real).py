@@ -19,7 +19,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 
-# ── Config ────────────────────────────────────────────────────────────────────
+# ── Config  ──────
 BASE_DIR        = Path(__file__).parent
 UPLOAD_DIR      = BASE_DIR / "uploads"
 TEMP_DIR        = BASE_DIR / "temp_print"
@@ -40,7 +40,7 @@ BW_PRICE        =  1.50   # ₹ per page
 for d in [UPLOAD_DIR, TEMP_DIR]:
     d.mkdir(parents=True, exist_ok=True)
 
-# ── Logging ───────────────────────────────────────────────────────────────────
+#  Logging  
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(message)s",
@@ -51,12 +51,12 @@ logging.basicConfig(
 )
 log = logging.getLogger("TakeAprinT")
 
-# ── Flask app ─────────────────────────────────────────────────────────────────
+# ── Flask app  ───
 app = Flask(__name__)
 CORS(app, origins=["http://localhost:5500", "http://127.0.0.1:5500",
                    "http://localhost:3000", "null"])
 
-# ── JSON persistence helpers ───────────────────────────────────────────────────
+# ── JSON persistence helpers 
 
 def load_json(path: Path, default):
     if path.exists():
@@ -71,7 +71,7 @@ def save_json(path: Path, data):
     tmp.write_text(json.dumps(data, indent=2, default=str))
     tmp.replace(path)          # atomic on POSIX
 
-# ── Paper counter ──────────────────────────────────────────────────────────────
+# ── Paper counter  
 
 def get_paper():
     return load_json(PAPER_STATE, {"color": 500, "bw": 500})
@@ -84,7 +84,7 @@ def decrement_paper(color_pages: int = 0, bw_pages: int = 0):
     log.info("Paper remaining — Color: %d  B&W: %d", state["color"], state["bw"])
     return state
 
-# ── Job log helpers ────────────────────────────────────────────────────────────
+#  Job log helpers 
 
 def load_jobs() -> dict:
     return load_json(LOG_FILE, {})
@@ -101,7 +101,7 @@ def update_job(job_id: str, **kwargs):
         jobs[job_id]["updated_at"] = datetime.utcnow().isoformat()
         save_json(LOG_FILE, jobs)
 
-# ── LibreOffice conversion ─────────────────────────────────────────────────────
+#  LibreOffice conversion 
 
 def convert_to_pdf(src: Path, dest_dir: Path) -> Path:
     """Convert any supported Office/image format to PDF using LibreOffice."""
@@ -125,7 +125,7 @@ def convert_to_pdf(src: Path, dest_dir: Path) -> Path:
         raise FileNotFoundError(f"Converted PDF not found: {pdf_path}")
     return pdf_path
 
-# ── PDF page splitting ─────────────────────────────────────────────────────────
+#  PDF page splitting 
 
 def extract_page_range(pdf_path: Path, from_page: int, to_page: int,
                         out_path: Path) -> Path:
@@ -152,7 +152,7 @@ def extract_page_range(pdf_path: Path, from_page: int, to_page: int,
         raise RuntimeError(f"Page extraction failed: {result.stderr}")
     return out_path
 
-# ── lpr printing ───────────────────────────────────────────────────────────────
+# ── lpr printing  ─
 
 TEST_MODE  = os.getenv("TAP_TEST_MODE", "1") == "1"   # set to "0" in production
 TESTFILES  = BASE_DIR / "testfiles"
@@ -171,10 +171,10 @@ def lpr_print(pdf_path: Path, printer: str, copies: int = 1,
             dest_name = f"{timestamp}_{mode_tag}_copy{copy}_{pdf_path.name}"
             dest      = TESTFILES / dest_name
             shutil.copy2(pdf_path, dest)
-            log.info("📂 [TEST] Saved → testfiles/%s", dest_name)
+            log.info("[TEST] Saved → testfiles/%s", dest_name)
         return "test_mode_ok"
 
-    # ── Real CUPS path ────────────────────────────────────────────────────────
+    #  Real CUPS path 
     color_opt = "KGSInkType=Color" if color else "KGSInkType=Grayscale"
     cmd = [
         "lpr",
@@ -202,8 +202,7 @@ def get_printer_status(printer: str) -> str:
     except Exception:
         return "lpstat unavailable"
 
-# ── Core print worker ──────────────────────────────────────────────────────────
-
+#core printer working or something
 def process_print_job(job_id: str):
     """
     Called in a background thread after payment is confirmed.
@@ -243,7 +242,7 @@ def process_print_job(job_id: str):
                 errors.append(f"File not found: {fname}")
                 continue
 
-            # ── 1. Convert to PDF ──────────────────────────────────────────
+            #  1. Convert to PDF 
             try:
                 pdf = convert_to_pdf(src, job_tmp)
             except Exception as e:
@@ -251,10 +250,10 @@ def process_print_job(job_id: str):
                 log.error("Conversion error: %s", e)
                 continue
 
-            # ── 2. Get total pages ─────────────────────────────────────────
+            #  2. Get total pages 
             page_count = file_info.get("pageCount", 1)
 
-            # ── 3. Build color + BW PDFs ───────────────────────────────────
+            #  3. Build color + BW PDFs 
             if print_type == "color" and pages_str != "all":
                 from_p, to_p = map(int, pages_str.split("-"))
             else:
@@ -304,21 +303,21 @@ def process_print_job(job_id: str):
                     errors.append(f"BW print failed for {fname}: {e}")
                     log.error("BW print error: %s", e)
 
-        # ── 4. Decrement paper ─────────────────────────────────────────────
+        #  4. Decrement paper 
         paper = decrement_paper(color_pages=total_color, bw_pages=total_bw)
 
-        # ── 5. Cleanup temp files ──────────────────────────────────────────
+        #  5. Cleanup temp files 
         shutil.rmtree(job_tmp, ignore_errors=True)
-        log.info("🧹 Temp files cleaned for job %s", job_id)
+        log.info("Temp files cleaned for job %s", job_id)
 
         # Also remove originals from upload dir
         for file_info in job["files"]:
             f = UPLOAD_DIR / file_info["saved_name"]
             if f.exists():
                 f.unlink()
-                log.info("🗑️  Removed upload: %s", f.name)
+                log.info("  Removed upload: %s", f.name)
 
-        # ── 6. Update log ──────────────────────────────────────────────────
+        #  6. Update log 
         final_status = "completed" if not errors else "completed_with_errors"
         update_job(job_id,
                    status=final_status,
@@ -335,7 +334,7 @@ def process_print_job(job_id: str):
         update_job(job_id, status="failed", error=str(e))
         shutil.rmtree(job_tmp, ignore_errors=True)
 
-# ── API Routes ─────────────────────────────────────────────────────────────────
+#  API Routes  
 
 @app.route("/api/upload", methods=["POST"])
 def upload_files():
@@ -428,7 +427,7 @@ def payment_webhook():
     Expected JSON body:
       { "job_id": "...", "payment_id": "...", "signature": "...", "status": "paid" }
     """
-    # ── Signature verification ──────────────────────────────────────────────
+    #  Signature verification 
     data = request.get_json(force=True, silent=True) or {}
     log.info("  Webhook received: %s", json.dumps(data))
 
@@ -450,7 +449,7 @@ def payment_webhook():
         log.info("Payment status not 'paid' (%s) for job %s", status, job_id)
         return jsonify(success=True, message="Non-payment event ignored")
 
-    # ── Find job ────────────────────────────────────────────────────────────
+    #  Find job 
     jobs = load_jobs()
     if job_id not in jobs:
         log.error("Webhook: job %s not found", job_id)
@@ -461,12 +460,12 @@ def payment_webhook():
         log.warning("Job %s already in status: %s", job_id, job["status"])
         return jsonify(success=True, message="Already processed")
 
-    # ── Mark paid and queue ─────────────────────────────────────────────────
+    #  Mark paid and queue 
     update_job(job_id,
                status="queued",
                payment_id=payment_id,
                paid_at=datetime.utcnow().isoformat())
-    log.info("💳 Payment confirmed for job %s — queuing print", job_id)
+    log.info("Payment confirmed for job %s — queuing print", job_id)
 
     # Start print worker in background thread
     t = threading.Thread(target=process_print_job, args=(job_id,), daemon=True)
@@ -539,7 +538,7 @@ def health():
     return jsonify(status="ok", timestamp=datetime.utcnow().isoformat())
 
 
-# ── Recovery: re-queue jobs that were mid-processing at shutdown ───────────────
+#  Recovery: re-queue jobs that were mid-processing at shutdown 
 
 def recover_interrupted_jobs():
     jobs = load_jobs()
@@ -554,7 +553,7 @@ def recover_interrupted_jobs():
             t.start()
             time.sleep(1)  # stagger recovery jobs
 
-# ── Entry point ───────────────────────────────────────────────────────────────
+# Entry point
 
 if __name__ == "__main__":
     log.info("  TakeAprinT server starting…")

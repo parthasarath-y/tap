@@ -20,7 +20,7 @@ import subprocess
 from pathlib import Path
 from datetime import datetime
 
-# ── Shared config (mirrors print_server.py) ───────────────────────────────────
+#  Shared config (mirrors print_server.py) 
 BASE_DIR     = Path(__file__).parent
 UPLOAD_DIR   = BASE_DIR / "uploads"
 TEMP_DIR     = BASE_DIR / "temp_print"
@@ -41,7 +41,7 @@ logging.basicConfig(
 )
 log = logging.getLogger("PrintWorker")
 
-# ── Helpers (duplicated to keep worker self-contained) ────────────────────────
+#  Helpers (duplicated to keep worker self-contained) 
 
 def load_json(path, default):
     if path.exists():
@@ -122,7 +122,7 @@ def lpr_print(pdf: Path, printer: str, copies: int, color: bool):
         raise RuntimeError(f"lpr error: {r.stderr}")
     log.info("Sent to %s: %s (%d copies)", printer, pdf.name, copies)
 
-# ── Core processor (same logic as server, self-contained) ─────────────────────
+#  Core processor (same logic as server, self-contained) 
 
 def process_job(job_id: str):
     jobs = load_jobs()

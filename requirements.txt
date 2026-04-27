@@ -3,11 +3,11 @@ flask>=3.0.0
 flask-cors>=4.0.0
 werkzeug>=3.0.0
 
-# PDF page counting (optional - server also uses pdf.js on frontend)
+# PDF page counting (optional; server also uses pdf.js on frontend)
 pypdf>=4.0.0
 
 # Note: The following are system packages, not pip packages:
-# - libreoffice      (sudo apt install libreoffice)
-# - cups             (sudo apt install cups)
-# - pdftk            (sudo apt install pdftk)   ← preferred splitter
-# - ghostscript      (sudo apt install ghostscript) ← fallback splitter
+# libreoffice      (sudo apt install libreoffice)
+#  cups             (sudo apt install cups)
+#  pdftk            (sudo apt install pdftk)   preferred splitter
+#  ghostscript      (sudo apt install ghostscript)  fallback splitter

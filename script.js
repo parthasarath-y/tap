@@ -15,7 +15,7 @@ const dropZone  = document.getElementById('dropZone');
 let uploadedFilesData = [];
 let activePoller      = null;
 
-// ── Drag & drop ───────────────────────────────────────────────────────────────
+//   Drag & drop  
 uploadBtn.addEventListener('click', () => fileInput.click());
 fileInput.addEventListener('change', () => handleFiles(fileInput.files));
 
@@ -30,7 +30,7 @@ fileInput.addEventListener('change', () => handleFiles(fileInput.files));
 });
 dropZone.addEventListener('drop', e => handleFiles(e.dataTransfer.files));
 
-// ── Page counter ──────────────────────────────────────────────────────────────
+//   Page counter   
 async function getPageCount(file) {
   const ext = file.name.toLowerCase().split('.').pop();
   try {
@@ -68,7 +68,7 @@ async function getPageCount(file) {
   }
 }
 
-// ── File handler ──────────────────────────────────────────────────────────────
+//   File handler   
 async function handleFiles(files) {
   if (!files?.length) return;
   if (preview.querySelector('.empty')) preview.innerHTML = '';
@@ -186,7 +186,7 @@ function updatePayButton() {
   if (!activePoller && uploadedFilesData.length > 0) payBtn.textContent = 'Continue & Pay';
 }
 
-// ── Local price calc ──────────────────────────────────────────────────────────
+//   Local price calc  
 function calculateLocalPrices() {
   const COLOR_PRICE = 10.5, BW_PRICE = 1.5;
   const filesData = [];
@@ -210,7 +210,7 @@ function calculateLocalPrices() {
   return { files: filesData, grandTotal: grandTotal.toFixed(2) };
 }
 
-// ── Order summary modal ───────────────────────────────────────────────────────
+//   Order summary modal               ─
 function showModal(data) {
   document.getElementById('confirmationModal')?.remove();
   const modal = document.createElement('div');
@@ -269,7 +269,7 @@ function showModal(data) {
   });
 }
 
-// ── Status overlay ────────────────────────────────────────────────────────────
+//   Status overlay   
 // Injects a full-screen overlay on top of everything showing current print state.
 // States: 'uploading' | 'waiting' | 'queued' | 'processing' | 'done' | 'error'
 
@@ -584,7 +584,7 @@ function showStatusOverlay(state, info = {}) {
   });
 }
 
-// ── Job poller ────────────────────────────────────────────────────────────────
+//   Job poller  ─
 function startPolling(jobId) {
   if (activePoller) clearInterval(activePoller);
 
@@ -634,7 +634,7 @@ function resetUI() {
   updatePayButton();
 }
 
-// ── Pay button ────────────────────────────────────────────────────────────────
+//   Pay button  ─
 payBtn.addEventListener('click', async function (e) {
   e.preventDefault();
   e.stopPropagation();
@@ -675,13 +675,13 @@ payBtn.addEventListener('click', async function (e) {
       activePoller = true; // block pay button while polling
       startPolling(result.job_id);
 
-      // ── Drop your payment gateway call here ──────────────────────────
+      //   Drop your payment gateway call here        
       // e.g. Razorpay:
       // const rzp = new Razorpay({ key:'rzp_live_xxx',
       //   amount: Math.round(result.grand_total * 100), currency:'INR',
       //   notes:{ job_id: result.job_id }, handler: ()=>{} });
       // rzp.open();
-      // ─────────────────────────────────────────────────────────────────
+      //   
 
     } else {
       showStatusOverlay('error', { message: result.message || 'Upload failed.' });
@@ -692,14 +692,14 @@ payBtn.addEventListener('click', async function (e) {
   }
 });
 
-// ── Escape helper ─────────────────────────────────────────────────────────────
+//   Escape helper   ─
 function escapeHtml(text) {
   const d = document.createElement('div');
   d.textContent = text;
   return d.innerHTML;
 }
 
-// ── Library check ─────────────────────────────────────────────────────────────
+//   Library check   ─
 window.addEventListener('DOMContentLoaded', () => {
   const missing = ['pdfjsLib','JSZip','XLSX'].filter(lib => typeof window[lib] === 'undefined');
   if (missing.length) console.warn('  Missing:', missing.join(', '));

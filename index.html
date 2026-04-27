@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TakeAprinT</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <link rel="icon" type="image/x-icon" href="images/icon.png">
 <link rel="stylesheet" href="style.css">
 
@@ -25,29 +24,36 @@
 </header>
 
 <main>
+  
   <section class="upload-area" id="dropZone">
     <h2>Upload Your Files</h2>
     <p>Select or drag files to print</p>
+
     <input type="file" id="fileInput" multiple
       accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.png,.jpg,.jpeg,.gif,.bmp,.txt,.rtf,.odt,.ods,.odp" />
+    
     <button type="button" id="uploadBtn">Browse Files</button>
     <p class="drag-text">Supported: PDF, Word, PowerPoint, Images or drag &amp; drop files here</p>
+    
     <div id="preview" class="preview">
       <p class="empty">No files uploaded yet...</p>
     </div>
+  
+  
   </section>
 
   <aside class="queue">
     <h3>Queue (0 people ahead)</h3>
     <h3>Files Uploaded:</h3>
     <div id="queueList"></div>
+  
   </aside>
+
 </main>
 
 <div class="footer-btn">
   <button type="button" id="payBtn" disabled>Continue &amp; Pay</button>
 </div>
-
 <script src="script.js"></script>
 </body>
 </html>
