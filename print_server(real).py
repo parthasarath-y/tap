@@ -520,7 +520,7 @@ def set_paper():
     if "bw" in data:
         state["bw"] = int(data["bw"])
     save_json(PAPER_STATE, state)
-    log.info("📄 Paper refilled: %s", state)
+    log.info(" Paper refilled: %s", state)
     return jsonify(success=True, paper=state)
 
 
@@ -544,7 +544,7 @@ def recover_interrupted_jobs():
     jobs = load_jobs()
     for job_id, job in jobs.items():
         if job["status"] in ("queued", "processing"):
-            log.warning("⚡ Recovering interrupted job %s (was: %s)",
+            log.warning(" Recovering interrupted job %s (was: %s)",
                         job_id, job["status"])
             update_job(job_id, status="queued",
                        recovery_note="Re-queued after server restart")
