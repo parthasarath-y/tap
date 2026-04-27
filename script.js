@@ -90,17 +90,21 @@ async function handleFiles(files) {
           <span class="copies-count">1</span>
           <button type="button" class="incr-btn"><i class="fa-solid fa-plus"></i></button>
         </div>
-        <button type="button" class="delete-file-btn" title="Remove"><i class="fa-solid fa-trash"></i></button>
+        <button type="button" class="delete-file-btn" title="Remove">del<i class="fa-solid fa-trash"></i></button>
       </div>
       <label>Print Type:
+
         <select class="print-type-select">
           <option value="bw" selected>Black &amp; White</option>
           <option value="color">Color</option>
-        </select>
+      
+          </select>
       </label>
       <div class="queue-page-range hidden">
-        <label>From: <input type="number" class="from-input" min="1" value="1" max="${pageCount}"></label>
-        <label>To:   <input type="number" class="to-input" min="1" value="${pageCount}" max="${pageCount}"></label>
+
+        <label>From: <input type="number" class="from-input" min="1" value="1" max="${pageCount}"> </label>
+        <label>To:   <input type="number" class="to-input" min="1" value="${pageCount}" max="${pageCount}"> </label>
+      
         <div style="margin-top:0.5rem;font-size:0.85rem;color:#64748b;">
           Color: <span class="color-count">${pageCount}</span> pages |
           B&amp;W: <span class="bw-count">0</span> pages
