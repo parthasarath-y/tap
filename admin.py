@@ -61,7 +61,7 @@ STATUS_COLOR = {
 def fmt_status(s):
     return color(STATUS_COLOR.get(s, "bold"), s)
 
-#   Commands
+# ── Commands ──────────────────────────────────────────────────────────────────
 
 def cmd_jobs(args):
     jobs = load_jobs()
@@ -114,7 +114,7 @@ def cmd_retry(args):
     jobs[args.id]["updated_at"] = datetime.utcnow().isoformat()
     jobs[args.id]["retry_note"] = f"Manual retry at {datetime.utcnow().isoformat()}"
     save_jobs(jobs)
-    print(color("green", f"  Job {args.id} re-queued. Run print_worker.py to process."))
+    print(color("green", f"✅ Job {args.id} re-queued. Run print_worker.py to process."))
 
 def cmd_paper(args):
     state = load_json(PAPER_STATE, {"color": 500, "bw": 500})
@@ -124,7 +124,7 @@ def cmd_paper(args):
         if args.bw is not None:
             state["bw"] = args.bw
         save_json(PAPER_STATE, state)
-        print(color("green", "  Paper counts updated"))
+        print(color("green", "✅ Paper counts updated"))
     print(f"\n  Color paper : {color('cyan', str(state['color']))} sheets")
     print(f"  B&W paper   : {color('cyan', str(state['bw']))} sheets\n")
 
@@ -141,12 +141,13 @@ def cmd_printers(args):
         print(f"  {label} ({name}): {status}")
 
 def cmd_simulate(args):
-    """Simulate a payment webhook for testing (calls the server directly)."""
+    # Simulate a payment webhook for testing
     import urllib.request
     import urllib.error
+    from datetime import timezone
 
     job_id     = args.id
-    payment_id = f"test_pay_{int(datetime.utcnow().timestamp())}"
+    payment_id = f"test_pay_{int(datetime.now(timezone.utc).timestamp())}"
     signature  = hashlib.sha256(
         f"{job_id}:{payment_id}:{WEBHOOK_SECRET}".encode()
     ).hexdigest()
@@ -158,17 +159,18 @@ def cmd_simulate(args):
         "signature":  signature,
     }).encode()
 
+    url = "http://localhost:3000/api/webhook/payment"
     req = urllib.request.Request(url, data=payload,
                                  headers={"Content-Type": "application/json"})
     try:
         with urllib.request.urlopen(req, timeout=5) as resp:
             body = json.loads(resp.read())
-            print(color("green", f" Webhook sent: {body}"))
+            print(color("green", f"Webhook sent: {body}"))
     except urllib.error.URLError as e:
         print(color("red", f"Server unreachable: {e}"))
         print("  Make sure print_server.py is running on port 3000.")
 
-#   Arg parser 
+# ── Arg parser ────────────────────────────────────────────────────────────────
 
 def main():
     parser = argparse.ArgumentParser(description="TakeAprinT Admin CLI")

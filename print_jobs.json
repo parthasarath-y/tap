@@ -60,5 +60,67 @@
       "bw": 468
     },
     "errors": []
+  },
+  "138443d2-7c3e-4d72-95a0-03d67a081bcd": {
+    "job_id": "138443d2-7c3e-4d72-95a0-03d67a081bcd",
+    "status": "completed",
+    "created_at": "2026-04-27T09:40:28.131110",
+    "updated_at": "2026-04-27T09:42:28.445597",
+    "files": [
+      {
+        "original_name": "lip.pdf",
+        "saved_name": "138443d2-7c3e-4d72-95a0-03d67a081bcd_0_lip.pdf",
+        "printType": "color",
+        "copies": 1,
+        "pages": "15-17",
+        "pageCount": 24,
+        "colorPages": 3,
+        "bwPages": 21,
+        "fileTotal": 63.0
+      }
+    ],
+    "grand_total": 63.0,
+    "payment_id": "test_pay_1777282947",
+    "paid_at": "2026-04-27T09:42:27.440101",
+    "started_at": "2026-04-27T09:42:27.443270",
+    "completed_at": "2026-04-27T09:42:28.445406",
+    "total_color_pages": 3,
+    "total_bw_pages": 21,
+    "paper_after": {
+      "color": 497,
+      "bw": 479
+    },
+    "errors": []
+  },
+  "f4c17464-5bae-40a0-8de0-e89dd3f69e92": {
+    "job_id": "f4c17464-5bae-40a0-8de0-e89dd3f69e92",
+    "status": "completed",
+    "created_at": "2026-04-27T09:42:53.045542",
+    "updated_at": "2026-04-27T09:43:19.703316",
+    "files": [
+      {
+        "original_name": "lip.pdf",
+        "saved_name": "f4c17464-5bae-40a0-8de0-e89dd3f69e92_0_lip.pdf",
+        "printType": "bw",
+        "copies": 1,
+        "pages": "all",
+        "pageCount": 24,
+        "colorPages": 0,
+        "bwPages": 24,
+        "fileTotal": 36.0
+      }
+    ],
+    "grand_total": 36.0,
+    "payment_id": "test_pay_1777282999",
+    "paid_at": "2026-04-27T09:43:19.688544",
+    "started_at": "2026-04-27T09:43:19.693602",
+    "completed_at": "2026-04-27T09:43:19.703126",
+    "total_color_pages": 0,
+    "total_bw_pages": 24,
+    "paper_after": {
+      "color": 497,
+      "bw": 455
+    },
+    "errors": []
   }
 }
