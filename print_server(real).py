@@ -559,3 +559,5 @@ if __name__ == "__main__":
     log.info("  TakeAprinT server starting…")
     recover_interrupted_jobs()
     app.run(host="0.0.0.0", port=3000, debug=False, threaded=True)
+
+#yeah i used claude , piss off
