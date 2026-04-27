@@ -61,7 +61,7 @@ STATUS_COLOR = {
 def fmt_status(s):
     return color(STATUS_COLOR.get(s, "bold"), s)
 
-# ── Commands ──────────────────────────────────────────────────────────────────
+#   Commands
 
 def cmd_jobs(args):
     jobs = load_jobs()
@@ -169,7 +169,7 @@ def cmd_simulate(args):
         print(color("red", f"Server unreachable: {e}"))
         print("  Make sure print_server.py is running on port 3000.")
 
-# ── Arg parser ────────────────────────────────────────────────────────────────
+#   Arg parser 
 
 def main():
     parser = argparse.ArgumentParser(description="TakeAprinT Admin CLI")

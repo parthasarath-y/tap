@@ -21,7 +21,7 @@ ALLOWED_EXTENSIONS = {
     'png', 'jpg', 'jpeg', 'gif', 'bmp', 'txt', 'rtf', 'odt', 'ods', 'odp'
 }
 
-# Pricing (in rupees)
+# Pricing (0.5 increase idk )
 COLOR_PRICE_PER_PAGE = 10.5
 BW_PRICE_PER_PAGE = 1.5
 
@@ -114,7 +114,7 @@ def upload_files():
         color_pages = 0
         bw_pages = page_count
 
-        # CORRECTED LOGIC for color page ranges
+        # logic for color page ranges
         if print_type == 'color' and pages_str != 'all':
             try:
                 # Parse range "4-20"
@@ -141,7 +141,7 @@ def upload_files():
                 color_pages = 0
                 bw_pages = page_count
 
-        # Calculate prices
+        # priecs calc
         color_price = color_pages * copies * COLOR_PRICE_PER_PAGE
         bw_price = bw_pages * copies * BW_PRICE_PER_PAGE
         file_total = color_price + bw_price
